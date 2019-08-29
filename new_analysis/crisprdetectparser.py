@@ -10,17 +10,24 @@ from collections import defaultdict
 import re
 
 ap = argparse.ArgumentParser()
-ap.add_argument('files', nargs='*')
-ap.add_argument('-s', '--spacers', nargs='?', const='spacers_dir',
-                default=None, help='Create spacers folder')
-ap.add_argument('-o', '--out', nargs='?', type=argparse.FileType('a+'),
-                default=sys.stdout)
-ap.add_argument('-t', '--sep', nargs='?', default='\t')
+ap.add_argument("files", nargs="*")
+ap.add_argument(
+    "-s",
+    "--spacers",
+    nargs="?",
+    const="spacers_dir",
+    default=None,
+    help="Create spacers folder",
+)
+ap.add_argument(
+    "-o", "--out", nargs="?", type=argparse.FileType("a+"), default=sys.stdout
+)
+ap.add_argument("-t", "--sep", nargs="?", default="\t")
 args = ap.parse_args()
 
 print = partial(print, file=args.out)
 spacers_ext = ".spacers.fna"
-filename2genome = lambda f: f.split('/')[-1].split(".crisprdetect")[0]
+filename2genome = lambda f: f.split("/")[-1].split(".crisprdetect")[0]
 
 if args.spacers:
     if not os.path.isdir(args.spacers):
@@ -36,7 +43,8 @@ with fileinput.input(args.files) as f:
                 if spacers_file:
                     spacers_file.close()
                 spacers_file = open(
-                    os.path.join(args.spacers, genome + spacers_ext), 'w')
+                    os.path.join(args.spacers, genome + spacers_ext), "w"
+                )
 
         # Array definition starts now.
         if line.startswith(">"):
@@ -45,7 +53,7 @@ with fileinput.input(args.files) as f:
             contig = F[0].lstrip(">")
             contigs_counter[contig] += 1
             number = contigs_counter[contig]
-            array_id = '{}_{}'.format(contig, number)
+            array_id = "{}_{}".format(contig, number)
 
             all(takewhile(lambda l: not l.startswith("==="), f))
             # Loop over all spacers.
@@ -53,8 +61,9 @@ with fileinput.input(args.files) as f:
                 F = line.split()
                 spacer_sequence = F[5]
                 if spacer_sequence == "|":
-                    end = int(F[0]) + (1 if orientation == 'Forward'
-                                       else -1) * int(F[1])
+                    end = int(F[0]) + (1 if orientation == "Forward" else -1) * int(
+                        F[1]
+                    )
                     num_spacers = ind
                     next(f)
                     line = next(f)
@@ -63,8 +72,7 @@ with fileinput.input(args.files) as f:
                 if ind == 0:
                     begin = F[0]
                 if args.spacers:
-                    print('>{}_{}'.format(
-                        array_id, ind + 1), file=spacers_file)
+                    print(">{}_{}".format(array_id, ind + 1), file=spacers_file)
                     print(F[5], file=spacers_file)
 
             # Continue loop till Array family
@@ -73,10 +81,22 @@ with fileinput.input(args.files) as f:
                     score = line.split(": ")[-1].strip()
 
                 if line.startswith("# Array family :"):
-                    family = re.search(
-                        r'# Array family :\s(.*?)(?:\s|$)', line).group(1)
-                    if orientation != 'Forward':
+                    family = re.search(r"# Array family :\s(.*?)(?:\s|$)", line).group(
+                        1
+                    )
+                    if orientation != "Forward":
                         begin, end = end, begin
-                    print(genome, contig, array_id, begin, end, orientation,
-                          num_spacers, family, score, repeat, sep=args.sep)
+                    print(
+                        genome,
+                        contig,
+                        array_id,
+                        begin,
+                        end,
+                        orientation,
+                        num_spacers,
+                        family,
+                        score,
+                        repeat,
+                        sep=args.sep,
+                    )
                     break

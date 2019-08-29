@@ -20,20 +20,27 @@ predict_ext = "_VIRSorter_mga_final.predict"
 csv_ext = "_VIRSorter_global-phage-signal.csv"
 
 ap = argparse.ArgumentParser()
-ap.add_argument('inputfiles', nargs='*',
-                help="Provide csv files here." +
-                "Predict files should be in the same directory." +
-                "CSV File is expect as {genome_id}" + predict_ext +
-                "Predict File is expected as {genome_id}" + csv_ext)
-ap.add_argument('-t', '--field-seperator', default='\t')
-ap.add_argument('-o', '--out', nargs='?', default=sys.stdout,
-                type=argparse.FileType('a+'))
-ap.add_argument('-l', '--log', nargs='?', default=sys.stderr,
-                type=argparse.FileType('a+'))
+ap.add_argument(
+    "inputfiles",
+    nargs="*",
+    help="Provide csv files here."
+    + "Predict files should be in the same directory."
+    + "CSV File is expect as {genome_id}"
+    + predict_ext
+    + "Predict File is expected as {genome_id}"
+    + csv_ext,
+)
+ap.add_argument("-t", "--field-seperator", default="\t")
+ap.add_argument(
+    "-o", "--out", nargs="?", default=sys.stdout, type=argparse.FileType("a+")
+)
+ap.add_argument(
+    "-l", "--log", nargs="?", default=sys.stderr, type=argparse.FileType("a+")
+)
 args = ap.parse_args()
 
 out = partial(print, file=args.out, sep=args.field_seperator)
-log = partial(print, file=args.log, sep='\n', end='\n---- ----\n')
+log = partial(print, file=args.log, sep="\n", end="\n---- ----\n")
 
 ID = uuid4()
 log("[INFO] Program %s started" % ID)
@@ -43,7 +50,7 @@ def parse_predict_file(predict_file):
     # keys are contigs, list of all genes with a tuple(min, max)
     contig_genes = defaultdict(list)
     contig = None
-    prog = re.compile(r'(\d+)')
+    prog = re.compile(r"(\d+)")
     do_first_check = None
     with open(predict_file) as f:
         for line in f:
@@ -53,12 +60,15 @@ def parse_predict_file(predict_file):
                     while not line.startswith(">"):
                         line = next(f)
                     try:
-                        contig = line.split('___', maxsplit=1)[0]
-                        contig = contig.split('_', maxsplit=1)[1]
+                        contig = line.split("___", maxsplit=1)[0]
+                        contig = contig.split("_", maxsplit=1)[1]
                         found_contig = True
                     except:
-                        log("[WARING] Could not find contig in this line:",
-                            line, traceback.format_exc())
+                        log(
+                            "[WARING] Could not find contig in this line:",
+                            line,
+                            traceback.format_exc(),
+                        )
                         line = next(f)
 
                 contig_genes_list = contig_genes[contig]
@@ -70,24 +80,24 @@ def parse_predict_file(predict_file):
             args = line.split()
             if do_first_check is True:
                 do_first_check = False
-                starts_with = int(args[0].split('_')[1])
-                for _ in range(starts_with-1):
+                starts_with = int(args[0].split("_")[1])
+                for _ in range(starts_with - 1):
                     contig_genes_list.append((1, 1))
             if do_first_check is None:
-                log("[WARNING] Something wrong with first check:",
-                    predict_file)
+                log("[WARNING] Something wrong with first check:", predict_file)
                 continue
             if len(args) < 3:
                 log("[WARNING] Something wrong with args:", predict_file)
                 continue
             args = [args[1], args[2], args[-2], args[-3]]
-            args = list(map(lambda d: int(d.group(1)),
-                        filter(bool, map(prog.match, args))))
+            args = list(
+                map(lambda d: int(d.group(1)), filter(bool, map(prog.match, args)))
+            )
             contig_genes[contig].append((min(args), max(args)))
     return contig_genes
 
 
-prog = re.compile(r'gene_(\d+)-gene_(\d+)')
+prog = re.compile(r"gene_(\d+)-gene_(\d+)")
 for line in fileinput.input(args.inputfiles):
     if fileinput.isfirstline():
         path_name = fileinput.filename()
@@ -98,10 +108,12 @@ for line in fileinput.input(args.inputfiles):
         try:
             contig_genes = parse_predict_file(predict_file)
         except:
-            log("[FATAL] Error while parsing predict file",
+            log(
+                "[FATAL] Error while parsing predict file",
                 "This genome will be left unprocessed",
                 predict_file,
-                traceback.format_exc())
+                traceback.format_exc(),
+            )
             fileinput.nextfile()
             continue
 
@@ -109,13 +121,13 @@ for line in fileinput.input(args.inputfiles):
 
     if line.startswith("#"):
         c = line[3]
-        if c != 'C' and c in map(str, range(7)):
+        if c != "C" and c in map(str, range(7)):
             cat = c
         continue
     s = sys.maxsize
     e = 0
-    contig = line.split('___', maxsplit=1)[0]
-    contig = contig.split('_', maxsplit=1)[1]
+    contig = line.split("___", maxsplit=1)[0]
+    contig = contig.split("_", maxsplit=1)[1]
     for group in prog.finditer(line):
         s_pot = int(group.group(1))
         e_pot = int(group.group(2))
@@ -150,6 +162,6 @@ for line in fileinput.input(args.inputfiles):
     if not cat:
         log("[WARNING] Cannot find cat:", line.trim(), genome)
         cat = "NULL"
-#        print(f'{c_s},{c_e},{s},{e}')
+    #        print(f'{c_s},{c_e},{s},{e}')
     out(genome, contig, cat, c_s, c_e, s, e)
 log("[INFO] Program %s finished" % ID)
