@@ -11,7 +11,9 @@ from operator import __or__
 
 
 from pprint import PrettyPrinter as pp
+
 pprint = pp().pprint
+
 
 def gene_proximity_matrix(vals, gene_distance):
     length = len(vals)
@@ -23,8 +25,7 @@ def gene_proximity_matrix(vals, gene_distance):
             matrix[i][j] = res
     for i in range(length):
         matrix[i][i] = False
-    return matrix    
-    
+    return matrix
 
 
 def proximity_matrix(vals, n=None):
@@ -42,11 +43,12 @@ def proximity_matrix(vals, n=None):
         for i, i_v in enumerate(vals):
             res = abs(j_v - i_v)
             if n:
-                 res = res <= n
+                res = res <= n
             matrix[i][j] = res
     for i in range(length):
         matrix[i][i] = False
     return matrix
+
 
 def create_clusters_from_proximity_matrix(D, clusters=None, skip=None):
     """
@@ -55,8 +57,8 @@ def create_clusters_from_proximity_matrix(D, clusters=None, skip=None):
     if not skip:
         skip = set()
     if not clusters:
-        clusters = list(map(lambda x : [x], range(len(D[0]))))
-    
+        clusters = list(map(lambda x: [x], range(len(D[0]))))
+
     for cur_id, vals in enumerate(D):
         if cur_id in skip:
             continue
@@ -67,8 +69,9 @@ def create_clusters_from_proximity_matrix(D, clusters=None, skip=None):
                 update_D(cur_id, other_id, D, clusters, skip)
                 create_clusters_from_proximity_matrix(D, clusters, skip)
                 break
-            
+
     return list(compress(clusters, clusters))
+
 
 def create_clusters_from_values(vals, n):
     """
@@ -77,8 +80,6 @@ def create_clusters_from_values(vals, n):
     D = proximity_matrix(vals, n=n)
     return create_clusters_from_proximity_matrix(D)
 
-
-    
 
 def update_D(cur_id, other_id, D, clusters, skip):
     """
@@ -93,9 +94,10 @@ def update_D(cur_id, other_id, D, clusters, skip):
     print(cur_id, other_id)
     print(clusters)
     clusters[other_id] = None
-    
-if __name__ == '__main__':
+
+
+if __name__ == "__main__":
     A = [28, 3, 6, 8, 16, 18, 22, 30]
-#    pprint(proximity_matrix(A))
-#    pprint(proximity_matrix(A, n=5))
+    #    pprint(proximity_matrix(A))
+    #    pprint(proximity_matrix(A, n=5))
     pprint(create_clusters_from_values(A, n=5))

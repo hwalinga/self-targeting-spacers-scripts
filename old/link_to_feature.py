@@ -9,7 +9,7 @@ Created on Sat Oct 27 22:18:18 2018
 from collections import defaultdict
 import sys
 
-n=0
+n = 0
 test = True
 
 if test:
@@ -21,9 +21,9 @@ else:
 
 feature_dict = defaultdict(dict)
 with open(feature_file) as f:
-    next(f) # header
+    next(f)  # header
     for line in f:
-        splitted_line = line.split('\t')
+        splitted_line = line.split("\t")
         if splitted_line[4] == "source":
             continue
         contig = splitted_line[2]
@@ -32,7 +32,7 @@ with open(feature_file) as f:
         start_gene = start if direction == "+" else end
         product = splitted_line[14]
         feature_dict[contig][start_gene] = splitted_line[14]
-        
+
 
 for line in open(gene_hits_file):
     splitted_orf = line.split()[1].split("_")
@@ -40,4 +40,4 @@ for line in open(gene_hits_file):
     start_gene = min(map(int, splitted_orf[-1][1:-1].split("-")))
     feature = feature_dict[contig].get(start_gene)
     feature = feature if feature else ""
-    print("\t".join([line.rstrip('\n'), feature]))
+    print("\t".join([line.rstrip("\n"), feature]))
