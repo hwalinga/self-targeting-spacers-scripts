@@ -1,0 +1,121 @@
+<!-- A PAM is defined by its consensus sequence
+(sometimes defined in IUPAC Ambigious codes
+(https://droog.gs.washington.edu/parc/images/iupac.html)).
+A PAM is on the 5' or the 3' side of the protospacer.
+So, the representation is literally:
+PAM - protospacer (if at the 5' end)
+protospacer - PAM (if at the 3' end)
+NB. This is different from the conventional way of representing the PAM,
+which confusingly is the reverse complement. (Don't ask why.)
+A PAM is always read from 5'-3', obviously.
+Adapted from:
+https://www.ncbi.nlm.nih.gov/pubmed/23145983 (Used definition PAM here)
+and from:
+https://www.tandfonline.com/doi/full/10.1080/15476286.2018.1504546
+(Which uses the other way around.)
+-->
+<PAM>
+    <system name="CAS-TypeIA" side="3">
+        <seq>NGG</seq>
+    </system>
+    <system name="CAS-TypeIB" side="3">
+        <seq>GAA</seq>
+        <seq>AGT</seq>
+        <seq>TTA</seq>
+        <seq>ATA</seq>
+        <seq>CTA</seq>
+        <seq>GTG</seq>
+        <seq>NGG</seq>
+    </system>
+    <system name="CAS-TypeIC" side="3">
+        <seq>GAA</seq>
+    </system>
+    <system name="CAS-TypeID" unknown="1">
+    </system>
+    <system name="CAS-TypeIE" side="3">
+        <seq>CTT</seq>
+        <seq>CAT</seq>
+        <seq>CCT</seq>
+        <seq>CTC</seq>
+
+        <seq>CC</seq>
+        <seq>CAT</seq>
+    </system>
+    <system name="CAS-TypeIF" side="3">
+        <seq>CG</seq>
+
+        <seq>CC</seq>
+        <seq>GC</seq>
+    </system>
+    <system name="CAS-TypeIIA" side="5">
+        <seq>WTTCTNN</seq>
+        <seq>TTTYRNNN</seq>
+    </system>
+    <system name="CAS-TypeIIB" side="5">
+        <seq>CNCCN</seq>
+        <seq>CCN</seq>
+    </system>
+    <system name="CAS-TypeIIC" unknown="1">
+    </system>
+    <system name="CAS-TypeIIIA" unknown="1">
+    </system>
+    <system name="CAS-TypeIIIB" unknown="1">
+    </system>
+    <system name="CAS-TypeIIIC" unknown="1">
+    </system>
+    <system name="CAS-TypeIIID" unknown="1">
+    </system>
+    <system name="CAS-TypeIU" unknown="1">
+    </system>
+    <system name="CAS-TypeIV" unknown="1">
+    </system>
+    <system name="CAS-TypeVA" side="3">
+        <seq>NAR</seq>
+        <seq>TAAA</seq>
+        <seq>
+            TAGA
+        </seq>
+        <seq>
+            TGGA
+        </seq>
+        <seq>
+            TGGG
+        </seq>
+    </system>
+    <system name="CAS-TypeVB" side="3">
+        <seq>
+            AAA
+        </seq>
+        <seq>
+            TAA
+        </seq>
+        <seq>
+            GAA
+        </seq>
+    </system>
+    <system name="CAS-TypeVC" unkown="1">
+    </system>
+    <system name="CAS-TypeVIA" side="5">
+        <seq>
+            C
+        </seq>
+    </system>
+    <system name="CAS-TypeVIB1" side="5">
+        <seq>
+            NTN
+        </seq>
+        <seq>
+            TNN
+        </seq>
+    </system>
+    <system name="CAS-TypeVIB2" side="5">
+        <seq>
+            NTN
+        </seq>
+        <seq>
+            TNN
+        </seq>
+    </system>
+    <system name="CAS-TypeVIC" unknown="1">
+    </system>
+</PAM>
