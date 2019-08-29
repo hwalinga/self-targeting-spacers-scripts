@@ -1,0 +1,5 @@
+#/bin/bash
+shopt -s expand_aliases
+alias mtawk="mawk -F '\t' -v OFS='\t'"
+mtawk 'NR!=1{print $1,$6,$NF}' hits.tsv.header > spacer_seq_info.tsv
+

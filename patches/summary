@@ -1,0 +1,14 @@
+#!/bin/bash
+PATCHES="../patches"
+# This only reduces by just 775 of a total of 179431. (Not anymore true???)
+# NOCAS makes Unclassified and 0 genes to NOCAS
+# Then: spacer size below or 70, repeat size 24 or higher and 50 or below
+# For arrays with size 2 an additional contraint is that they must have a
+# known repeat family
+shopt -s expand_aliases
+alias mtawk="mawk -F '\t' -v OFS='\t'"
+mtawk -f $PATCHES/NOCAS.awk genome.types.csv gene.matched.tsv.more |
+    mtawk '$8<=70 && $15>=24 && $15<=50 && ($13>2 || $16!="NA")' |
+    python3 $PATCHES/remove_duplicates.py | # > hits.tsv.awk
+    python3 $PATCHES/filter_out_arrays_patch.py -f spacers.info.csv \
+    > hits.tsv.header.cvs
