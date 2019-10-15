@@ -1,13 +1,13 @@
 import argparse
-import fileinput
-import sys
-from functools import partial
 import csv
-from uuid import uuid4
+import fileinput
 import re
-from operator import itemgetter
+import sys
 from collections import defaultdict
+from functools import partial
 from itertools import chain
+from operator import itemgetter
+from uuid import uuid4
 
 ap = argparse.ArgumentParser()
 ap.add_argument("inputfiles", nargs="*")
@@ -77,6 +77,7 @@ def determine_one_caslocus(cas_item, crispr, cas2crispr_links):
     """
     k, v = cas_item
     castypeset = set(v[0].split("|"))
+    # transform to Single/Uncomplete/ambiguous
     casclasstype = v[1].split("_")[0].capitalize()
     match = set()
     casclassarray_poss = 1  # Loner
