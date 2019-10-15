@@ -13,4 +13,4 @@ mtawk -f $PATCHES/NOCAS.awk genome.types.csv gene.matched.tsv.more |
     python3 $PATCHES/remove_duplicates.py | # > hits.tsv.awk
     python3 $PATCHES/filter_out_arrays_patch.py -f spacers.info.csv |
     python3 $PATCHES/new_typing.py -f genome.types.csv \
-    > hits.tsv.header.cvs
+    > hits.tsv.header.csv
